@@ -2,14 +2,14 @@ package model;
 
 public class Account {
     public enum Type {EUR, USD, UAH}
-    private long accountId;
+    private int accountId;
     private Type currencyAccount; // валюта счета
     private double balance;
 
     private User user;
 
     // Конструктор класса
-    public Account(long accountId, Type currencyAccount, double balance, User user) {
+    public Account(int accountId, Type currencyAccount, double balance, User user) {
         this.accountId = accountId;
         this.currencyAccount = currencyAccount;
         this.balance = balance;
@@ -25,11 +25,11 @@ public class Account {
     }
 
     // Геттеры и сеттеры для всех полей
-    public long getAccountId() {
+    public int getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(long accountId) {
+    public void setAccountId(int accountId) {
         this.accountId = accountId;
     }
 

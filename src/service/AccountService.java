@@ -13,12 +13,12 @@ public class AccountService {
     private static final Map<Integer, Account> accounts = new HashMap<>();
 
     // Метод для открытия нового счета
-    public static void openAccount(User user, String currency) {
-        Account account = new Account(currency);
-        user.addAccount(account); // Добавляем счет пользователю
-        accounts.put(account.getId(), account);
-        System.out.println("Открыт новый счет для пользователя в валюте: " + currency);
-    }
+//    public static void openAccount(User user, String currency) {
+//        Account account = new Account(currency);
+//        user.addAccount(account); // Добавляем счет пользователю
+//        accounts.put(account.getId(), account);
+//        System.out.println("Открыт новый счет для пользователя в валюте: " + currency);
+//    }
 
     // Метод для пополнения счета в выбранной валюте с учетом комиссии
     public static void deposit(Account account, double amount) {
@@ -30,7 +30,7 @@ public class AccountService {
         // Пополняем счет
         account.setBalance(account.getBalance() + amountToDeposit);
 
-        System.out.println("Счет успешно пополнен на " + amountToDeposit + " " + account.getCurrency() + ".");
+        System.out.println("Счет успешно пополнен на " + amountToDeposit + " " + account.getCurrencyAccount() + ".");
     }
 
     // Метод для расчета комиссии
@@ -40,15 +40,15 @@ public class AccountService {
 
     // Метод для снятия средств со счета
     public static void withdraw(Account account, double amount) {
-        double commission = calculateCommission(amount); // Рассчитываем комиссию
-
-        if (account.getBalance() >= (amount + commission)) {
-            account.setBalance(account.getBalance() - (amount + commission)); // Учитываем комиссию
-            account.getTransactionHistory().add(new Transaction("withdraw", account.getCurrency(), amount));
-            System.out.println("Со счета успешно снято " + amount + " " + account.getCurrency() + " с учетом комиссии.");
-        } else {
-            System.out.println("Недостаточно средств на счете.");
-        }
+//        double commission = calculateCommission(amount); // Рассчитываем комиссию
+//
+//        if (account.getBalance() >= (amount + commission)) {
+//            account.setBalance(account.getBalance() - (amount + commission)); // Учитываем комиссию
+//            account.getTransactionHistory().add(new Transaction("withdraw", account.getCurrency(), amount));
+//            System.out.println("Со счета успешно снято " + amount + " " + account.getCurrency() + " с учетом комиссии.");
+//        } else {
+//            System.out.println("Недостаточно средств на счете.");
+//        }
     }
 
     // Метод для получения текущего баланса счета пользователя
@@ -58,15 +58,15 @@ public class AccountService {
 
     // Метод для просмотра истории операций для конкретного счета
 
-    public static List<Transaction> getTransactionHistory(User user) {
-        List<Transaction> transactionHistory = new ArrayList<>();
-        for (Object account : user.getAccounts()) {
-            if (account instanceof Account) {
-                transactionHistory.addAll(((Account) account).getTransactionHistory());
-            }
-        }
-        return transactionHistory;
-    }
+//    public static List<Transaction> getTransactionHistory(User user) {
+//        List<Transaction> transactionHistory = new ArrayList<>();
+//        for (Object account : user.getAccounts()) {
+//            if (account instanceof Account) {
+//                transactionHistory.addAll(((Account) account).getTransactionHistory());
+//            }
+//        }
+//        return transactionHistory;
+//    }
 
     //метод проверяет остаток средств на счете. Если остаток равен 0, счет закрывается.
     // Если остаток больше 0, выводится сообщение о необходимости снять все средства сначала.
@@ -74,7 +74,7 @@ public class AccountService {
     public static void closeAccount(Account account) {
         double balance = account.getBalance();
         if (balance == 0) {
-            accounts.remove(account.getId());
+            accounts.remove(account.getAccountId());
             System.out.println("Счет успешно закрыт.");
         } else if (balance > 0) {
             System.out.println("На счету еще остаток. Пожалуйста, сначала снимите все средства.");
@@ -98,14 +98,14 @@ public class AccountService {
 
     // будет принимать пользователя, перебирает все его счета и добавляет историю операций каждого
     // счета в общий список истории операций пользователя и возвращает историю операций для всех его счетов
-    public static List<Transaction> getUserTransactionHistory(User user) {
-        List<Transaction> userTransactionHistory = new ArrayList<>();
-        for (Object accountObj : user.getAccounts()) {
-            if (accountObj instanceof Account) {
-                Account account = (Account) accountObj;
-                userTransactionHistory.addAll(account.getTransactionHistory());
-            }
-        }
-        return userTransactionHistory;
-    }
+//    public static List<Transaction> getUserTransactionHistory(User user) {
+//        List<Transaction> userTransactionHistory = new ArrayList<>();
+//        for (Object accountObj : user.getAccounts()) {
+//            if (accountObj instanceof Account) {
+//                Account account = (Account) accountObj;
+//                userTransactionHistory.addAll(account.getTransactionHistory());
+//            }
+//        }
+//        return userTransactionHistory;
+//    }
 }

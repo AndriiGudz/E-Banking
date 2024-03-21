@@ -1,5 +1,7 @@
 package view;
 
+import service.UserService;
+
 import java.util.Scanner;
 
 
@@ -43,7 +45,7 @@ public class Main {
             scanner.nextLine();
             switch (choice) {
                 case 1:
-                    registerUser();
+                    registerUser(scanner);
                     break;
                 case 2:
                     login();
@@ -137,8 +139,15 @@ public class Main {
         System.out.println("0. Вернуться в главное меню");
     }
 
-    private static void registerUser() {
+    private static void registerUser(Scanner scanner) {
         // Реализация регистрации нового пользователя
+            System.out.println("Введите ваш email:");
+            String email = scanner.nextLine();
+
+            System.out.println("Введите пароль:");
+            String password = scanner.nextLine();
+
+            UserService.registerUser(email, password);
     }
 
     private static void login() {

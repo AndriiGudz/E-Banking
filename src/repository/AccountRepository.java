@@ -11,7 +11,7 @@ public class AccountRepository {
 
     // Метод для сохранения нового счета в репозитории
     public static void saveAccount(Account account) {
-        accounts.put(account.getId(), account);
+        accounts.put(account.getAccountId(), account);
     }
 
     // Метод для поиска счета по его идентификатору

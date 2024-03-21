@@ -6,27 +6,33 @@ import java.util.List;
 public class User {
     public enum Role {USER, ADMIN}
 
-    private int userId;
-
+    private static int nexId = 1;
+    private final int userId;
     private String username;
     private String email;
     private String password;
     private  Role role;
+    private boolean isAdmin;
 
-    public User(int userId, String username, String email, String password, Role role) {
-        this.userId = userId;
+    public User(String email, String password) {
+        this.userId = nexId++;
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.isAdmin = false;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public int getUserId() {
         return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getUsername() {
@@ -69,4 +75,6 @@ public class User {
                 ", role=" + role +
                 '}';
     }
+
+
 }

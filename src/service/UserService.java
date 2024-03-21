@@ -26,7 +26,7 @@ public class UserService {
         }
 
         User user = new User(email, password);
-        users.put(user.getId(), user);
+        users.put(user.getUserId(), user);
         System.out.println("Пользователь успешно зарегистрирован.");
     }
 

@@ -70,4 +70,8 @@ public class Transaction {
     public void setDestinationAccountId(String destinationAccountId) {
         this.destinationAccountId = destinationAccountId;
     }
+
+    public CurrencyCode getCurrencyCode() {
+        return getCurrencyCode();
+    }
 }
