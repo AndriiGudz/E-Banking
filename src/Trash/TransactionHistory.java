@@ -1,4 +1,6 @@
-package model;
+package Trash;
+
+import model.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
