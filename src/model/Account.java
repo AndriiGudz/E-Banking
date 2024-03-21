@@ -6,11 +6,22 @@ public class Account {
     private Type currencyAccount; // валюта счета
     private double balance;
 
+    private User user;
+
     // Конструктор класса
-    public Account(long accountId, Type currencyAccount, double balance) {
+    public Account(long accountId, Type currencyAccount, double balance, User user) {
         this.accountId = accountId;
         this.currencyAccount = currencyAccount;
         this.balance = balance;
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     // Геттеры и сеттеры для всех полей
@@ -37,6 +48,23 @@ public class Account {
     public void setBalance(double balance) {
         this.balance = balance;
     }
+
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountId=" + accountId +
+                ", currencyAccount=" + currencyAccount +
+                ", balance=" + balance +
+                ", user=" + user +
+                '}';
+    }
+
+
+
+
+
+
 
     // Метод для пополнения счета
     public void deposit(double amount) {

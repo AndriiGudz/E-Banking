@@ -1,4 +1,4 @@
-package model;
+package Trash;
 
 import java.util.HashMap;
 import java.util.Map;

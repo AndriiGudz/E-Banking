@@ -1,10 +1,16 @@
-package model;
+package Trash;
 
 public class Currency {
     public enum Type {EUR, USD, UAH}
 
     private Type currencyType; // тип валюты
     private double exchangeRate; // курс обмена
+
+    // полное название валюты сделать
+
+
+
+
 
     // Конструктор класса
     public Currency(Type currencyType, double exchangeRate) {

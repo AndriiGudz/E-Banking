@@ -4,24 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+    public enum Role {USER, ADMIN}
+
     private int userId;
+
     private String username;
     private String email;
     private String password;
-    private List<Account> accounts; // список счетов
-    private List<Transaction> transactionHistory; // список транзакций
+    private  Role role;
 
-    // Конструктор класса
-    public User(int userId, String username, String email, String password) {
+    public User(int userId, String username, String email, String password, Role role) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.accounts = new ArrayList<>();
-        this.transactionHistory = new ArrayList<>();
+        this.role = role;
     }
 
-    // Геттеры и сеттеры для всех полей
     public int getUserId() {
         return userId;
     }
@@ -54,30 +53,12 @@ public class User {
         this.password = password;
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
+    public Role getRole() {
+        return role;
     }
 
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
-
-    public List<Transaction> getTransactionHistory() {
-        return transactionHistory;
-    }
-
-    public void setTransactionHistory(List<Transaction> transactionHistory) {
-        this.transactionHistory = transactionHistory;
-    }
-
-    // Метод для добавления нового счета
-    public void addAccount(Account account) {
-        this.accounts.add(account);
-    }
-
-    // Метод для добавления новой транзакции в историю операций
-    public void addTransaction(Transaction transaction) {
-        this.transactionHistory.add(transaction);
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override
@@ -85,7 +66,7 @@ public class User {
         return "User{" +
                 "userId=" + userId +
                 ", username='" + username + '\'' +
-                ", accounts=" + accounts +
+                ", role=" + role +
                 '}';
     }
 }

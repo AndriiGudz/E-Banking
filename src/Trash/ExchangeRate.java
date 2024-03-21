@@ -1,4 +1,4 @@
-package model;
+package Trash;
 // Класс представляет курс обмена между различными валютами
 public class ExchangeRate {
     public enum Type {EUR, USD, UAH}
