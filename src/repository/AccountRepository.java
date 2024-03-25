@@ -10,6 +10,7 @@ import java.util.*;
 public class AccountRepository {
     // Коллекция для хранения счетов
     private static final Map<UUID, Account> accounts = new HashMap<>();
+//    private static final Map<Integer, Account> accounts = new HashMap<>();
 
     // Метод для открытия нового счета
     public static Account openAccount(User user, Account.Type currencyAccount, double initialBalance) {
@@ -34,37 +35,54 @@ public class AccountRepository {
         accounts.put(account.getAccountId(), account);
     }
 
-//    public static List<Account> getAllAccounts() {
-//        List<Account> allAccounts = new ArrayList<>();
-//        for (User user : users.values()) {
-//            allAccounts.addAll(user.getAccounts());
-//        }
-//        return allAccounts;
-//    }
+    // Просмотреть все счета всех пользователей
+    public static void getAllAccounts() {
+        if (accounts.isEmpty()) {
+            System.out.println("Нет открытых счетов.");
+        } else {
+            for (Account account : accounts.values()) {
+                System.out.println("------------------------------------");
+                System.out.println("**Информация о счете:**");
+                System.out.println("Владелец: " + account.getUser().getUsername());
+                System.out.println("Номер счета: " + account.getAccountId());
+                System.out.println("Валюта: " + account.getCurrencyAccount());
+                System.out.println("Баланс: " + account.getBalance());
+                System.out.println("------------------------------------");
+            }
+        }
+    }
 
-    // Открытые счета у пользователя
-//    public static void viewAllAccounts() {
-//        User currentUser = UserService.currentUser(); // Получаем текущего авторизованного пользователя
-//
-//        if (currentUser != null) {
-//            boolean hasAccounts = false;
-//
-//            // Проходим по всем счетам в репозитории
-//            for (Account account : AccountRepository.getAllAccounts()) {
-//                // Проверяем, совпадает ли владелец счета с текущим пользователем
-//                if (account.getUser().equals(currentUser)) {
-//                    System.out.println(account);
-//                    hasAccounts = true;
-//                }
-//            }
-//
-//            if (!hasAccounts) {
-//                System.out.println("У вас еще нет открытых счетов.");
-//            }
-//        } else {
-//            System.out.println("Вы не авторизованы.");
-//        }
-//    }
+
+    // Просмотреть открытые счета у пользователя
+    public static void viewAllAccountsUser() {
+        User currentUser = UserService.currentUser(); // Получаем текущего авторизованного пользователя
+
+        if (currentUser != null) {
+            boolean hasAccounts = false;
+
+            // Проходим по всем счетам в репозитории
+            for (Account account : accounts.values()) {
+                // Проверяем, совпадает ли владелец счета с текущим пользователем
+                if (account.getUser().equals(currentUser)) {
+                    System.out.println("------------------------------------");
+                    System.out.println("**Информация о счете:**");
+                    System.out.println("Владелец: " + account.getUser().getUsername());
+                    System.out.println("Номер счета: " + account.getAccountId());
+                    System.out.println("Валюта: " + account.getCurrencyAccount());
+                    System.out.println("Баланс: " + account.getBalance());
+                    System.out.println("------------------------------------");
+
+                    hasAccounts = true;
+                }
+            }
+
+            if (!hasAccounts) {
+                System.out.println("У вас еще нет открытых счетов.");
+            }
+        } else {
+            System.out.println("Вы не авторизованы.");
+        }
+    }
 
 //    private static final Map<Integer, Account> accounts = new HashMap<>();
 

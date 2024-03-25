@@ -11,7 +11,6 @@ public class Account {
 
     // Конструктор класса
     public Account(Type currencyAccount, double balance, User user) {
-        // this.accountId = UUID.fromString(currencyAccount.toString() + UUID.randomUUID());
         this.accountId = UUID.randomUUID();
         this.currencyAccount = currencyAccount;
         this.balance = balance;
