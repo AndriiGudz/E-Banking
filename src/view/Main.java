@@ -175,6 +175,13 @@ public class Main {
 
     private static void login() {
         // Реализация входа в аккаунт
+        System.out.println("Введите ваш email:");
+        String email = scanner.nextLine();
+
+        System.out.println("Введите пароль:");
+        String password = scanner.nextLine();
+
+        UserService.authenticateUser(email, password);
     }
 
     private static void viewBalance() {
