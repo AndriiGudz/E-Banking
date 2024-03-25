@@ -17,6 +17,7 @@ public class Main {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        UserService.initialUsers();
 
         CurrencyService.addCurrency(CurrencyCode.USD, 1.0);
         CurrencyService.addCurrency(CurrencyCode.EUR, 1.12);
