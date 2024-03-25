@@ -2,9 +2,12 @@ package repository;
 
 
 import model.Account;
+import model.Transaction;
+import model.TransactionType;
 import model.User;
 import service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class AccountRepository {
@@ -30,6 +33,7 @@ public class AccountRepository {
         return newAccount;
     }
 
+
     // Метод для сохранения счета в репозитории
     public static void saveAccount(Account account) {
         accounts.put(account.getAccountId(), account);
@@ -51,7 +55,6 @@ public class AccountRepository {
             }
         }
     }
-
 
     // Просмотреть открытые счета у пользователя
     public static void viewAllAccountsUser() {
@@ -81,6 +84,43 @@ public class AccountRepository {
             }
         } else {
             System.out.println("Вы не авторизованы.");
+        }
+    }
+
+    public static void withdrawAmount(User user, String accountIdString, double amount) {
+        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+            System.out.println("Ошибка: Требуется авторизация для открытия нового счета.");
+        }
+        UUID accountId = UUID.fromString(accountIdString);
+        Account account = accounts.get(accountId);
+        if (account != null) {
+            if (account.getBalance() >= amount) {
+                account.setBalance(account.getBalance() - amount);
+                Transaction transaction = new Transaction(Transaction.Type.DEBIT, amount, LocalDateTime.now());
+                System.out.println("Cумма " + amount + " была успешно снята со счета");
+                System.out.println(transaction.toString());
+                System.out.println("Текущий баланс: " + account.getBalance());
+            } else {
+                System.out.println("На счету недостаточно средств");
+            }
+        } else {
+            System.out.println("Такой счет не найден");
+        }
+    }
+    public static void depositAmount(User user, String accountIdString, double amount) {
+        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+            System.out.println("Ошибка: Требуется авторизация для открытия нового счета.");
+        }
+        UUID accountId = UUID.fromString(accountIdString);
+        Account account = accounts.get(accountId);
+        if (account != null) {
+            account.setBalance(account.getBalance() + amount);
+            Transaction transaction = new Transaction(Transaction.Type.CREDIT, amount, LocalDateTime.now());
+            System.out.println("Cумма " + amount + " была успешно внесена на счет");
+            System.out.println(transaction.toString());
+            System.out.println("Текущий баланс: " + account.getBalance());
+        } else {
+            System.out.println("Такой счет не найден");
         }
     }
 
