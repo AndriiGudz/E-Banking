@@ -3,6 +3,7 @@ package service;
 import model.Currency;
 import model.CurrencyCode;
 import model.ExchangeRateEntry;
+import model.Transaction;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -65,5 +66,27 @@ public class CurrencyService {
         CurrencyService.addCurrency(CurrencyCode.GBP, 1.33); // Например, 1 USD = 1.33 GBP
         CurrencyService.addCurrency(CurrencyCode.PLN, 0.26); // Например, 1 USD = 0.26 PLN
         CurrencyService.addCurrency(CurrencyCode.CZK, 0.044); // Например, 1 USD = 0.044 CZK
+
     }
+
+
+    // Метод для просмотра всех операций
+    public static void viewAllTransactions(List<Transaction> transactions) {
+        if (transactions.isEmpty()) {
+            System.out.println("Нет доступных транзакций для отображения.");
+        } else {
+            System.out.println("Список всех транзакций:");
+            for (Transaction transaction : transactions) {
+                System.out.println("ID транзакции: " + transaction.getTransactionId());
+                System.out.println("Тип операции: " + transaction.getTransactionType());
+                System.out.println("Сумма: " + transaction.getAmount());
+                System.out.println("Дата и время: " + transaction.getDateTime());
+                System.out.println("----------------------------------------");
+            }
+        }
+    }
+
 }
+
+
+
