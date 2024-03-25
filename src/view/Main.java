@@ -4,12 +4,13 @@ import model.Account;
 import model.CurrencyCode;
 import model.User;
 import repository.AccountRepository;
-import service.CurrencyService;
+
 import service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Scanner;
+import service.CurrencyService;
 
 
 public class Main {
@@ -69,10 +70,10 @@ public class Main {
                     viewBalance();
                     break;
                 case 4:
-                    deposit();
+                    deposit(scanner);
                     break;
                 case 5:
-                    withdraw();
+                    withdraw(scanner);
                     break;
                 case 6:
                     openAccount(scanner);
@@ -180,13 +181,28 @@ public class Main {
         // Реализация просмотра баланса
     }
 
-    private static void deposit() {
+    private static void deposit(Scanner scanner) {
         // Реализация пополнения счета
+        User user = UserService.currentUser();
+        AccountRepository.viewAllAccountsUser();
+        System.out.println("Выберите счет: ");
+        String accountId = scanner.nextLine();
+        System.out.println("Введите сумму для пополнения счета: ");
+        double amount = scanner.nextInt();
+        AccountRepository.depositAmount(user, accountId, amount);
     }
 
-    private static void withdraw() {
+    private static void withdraw(Scanner scanner) {
         // Реализация снятия средств со счета
+        User user = UserService.currentUser();
+        AccountRepository.viewAllAccountsUser();
+        System.out.println("Выберите счет: ");
+        String accountIdString = scanner.nextLine();
+        System.out.println("Введите сумму для снятия: ");
+        double amount = scanner.nextInt();
+        AccountRepository.withdrawAmount(user, accountIdString, amount);
     }
+
 
     private static void openAccount(Scanner scanner) {
         // Реализация открытия нового счета

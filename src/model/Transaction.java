@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 public class Transaction {
     public enum Type {DEBIT, CREDIT}
-
-    private int transactionId; // идентификатор транзакции
+    private static int nexId = 1;
+    private final int transactionId; // идентификатор транзакции
     private Type transactionType; // тип операции
     private double amount; // сумма транзакции
     private LocalDateTime dateTime; // время транзакции
@@ -13,8 +13,8 @@ public class Transaction {
     private String destinationAccountId; // счет на который переводят
 
     // Конструктор класса
-    public Transaction(int transactionId, Type transactionType, double amount, LocalDateTime dateTime, String sourceAccountId, String destinationAccountId) {
-        this.transactionId = transactionId;
+    public Transaction(Type transactionType, double amount, LocalDateTime dateTime) {
+        this.transactionId = nexId++;
         this.transactionType = transactionType;
         this.amount = amount;
         this.dateTime = dateTime;
@@ -22,14 +22,22 @@ public class Transaction {
         this.destinationAccountId = destinationAccountId;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "transactionId=" + transactionId +
+                ", transactionType=" + transactionType +
+                ", amount=" + amount +
+                ", dateTime=" + dateTime +
+                '}';
+    }
+
     // Геттеры и сеттеры для всех полей
     public int getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(int transactionId) {
-        this.transactionId = transactionId;
-    }
+
 
     public Type getTransactionType() {
         return transactionType;
