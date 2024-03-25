@@ -1,8 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class User {
     public enum Role {USER, ADMIN}
 
@@ -11,15 +8,15 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private  Role role;
+    private Role role;
     private boolean isAdmin;
 
-    public User(String email, String password) {
+    public User(String username, String email, String password) {
         this.userId = nexId++;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.role = Role.USER;
         this.isAdmin = false;
     }
 

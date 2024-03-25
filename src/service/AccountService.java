@@ -12,14 +12,6 @@ import java.util.Map;
 public class AccountService {
     private static final Map<Integer, Account> accounts = new HashMap<>();
 
-    // Метод для открытия нового счета
-//    public static void openAccount(User user, String currency) {
-//        Account account = new Account(currency);
-//        user.addAccount(account); // Добавляем счет пользователю
-//        accounts.put(account.getId(), account);
-//        System.out.println("Открыт новый счет для пользователя в валюте: " + currency);
-//    }
-
     // Метод для пополнения счета в выбранной валюте с учетом комиссии
     public static void deposit(Account account, double amount) {
         // Вычисляем сумму, которую нужно зачислить на счет с учетом комиссии

@@ -1,35 +1,28 @@
 package model;
 
+import java.util.UUID;
+
 public class Account {
-    public enum Type {EUR, USD, UAH}
-    private int accountId;
+    public enum Type {EUR, USD, GBP}
+    private UUID accountId;
     private Type currencyAccount; // валюта счета
     private double balance;
-
     private User user;
 
     // Конструктор класса
-    public Account(int accountId, Type currencyAccount, double balance, User user) {
-        this.accountId = accountId;
+    public Account(Type currencyAccount, double balance, User user) {
+        // this.accountId = UUID.fromString(currencyAccount.toString() + UUID.randomUUID());
+        this.accountId = UUID.randomUUID();
         this.currencyAccount = currencyAccount;
         this.balance = balance;
         this.user = user;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    // Геттеры и сеттеры для всех полей
-    public int getAccountId() {
+    public UUID getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(int accountId) {
+    public void setAccountId(UUID accountId) {
         this.accountId = accountId;
     }
 
@@ -37,8 +30,8 @@ public class Account {
         return currencyAccount;
     }
 
-    public void setCurrencyAccount(Type currencyType) {
-        this.currencyAccount = currencyType;
+    public void setCurrencyAccount(Type currencyAccount) {
+        this.currencyAccount = currencyAccount;
     }
 
     public double getBalance() {
@@ -49,44 +42,22 @@ public class Account {
         this.balance = balance;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public String toString() {
-        return "Account{" +
+        String userString = (user != null) ? user.toString() : "null";
+        return "Account {" +
                 "accountId=" + accountId +
                 ", currencyAccount=" + currencyAccount +
                 ", balance=" + balance +
-                ", user=" + user +
+                ", user=" + userString +
                 '}';
-    }
-
-
-
-
-
-
-
-    // Метод для пополнения счета
-    public void deposit(double amount) {
-        balance += amount;
-    }
-
-    // Метод для снятия средств со счета
-    public void withdraw(double amount) {
-        if (balance >= amount) {
-            balance -= amount;
-        } else {
-            System.out.println("Недостаточно средств.");
-        }
-    }
-
-    // Метод для перевода средств с одного счета на другой
-    public void transfer(Account recipient, double amount) {
-        if (balance >= amount) {
-            balance -= amount;
-            recipient.deposit(amount);
-        } else {
-            System.out.println("Недостаточно средств.");
-        }
     }
 }
