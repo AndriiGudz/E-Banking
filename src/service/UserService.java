@@ -125,5 +125,24 @@ public class UserService {
         System.out.println("Недостаточно прав для назначения администратора.");
     }
 
+    // Метод для наполнения начальной базы пользователей.
+    public static void initialUsers() {
+        // Создаем несколько тестовых пользователей
+        User user1 = new User("User1", "user1@example.com", "Password1!");
+        User user2 = new User("User2", "user2@example.com", "Password2!");
+        User admin = new User("admin", "admin@example.com", "Password3!");
+
+        // Назначаем администратору роль "ADMIN"
+        admin.setRole(User.Role.ADMIN);
+
+        // Добавляем пользователей в базу
+        users.put(user1.getUserId(), user1);
+        users.put(user2.getUserId(), user2);
+        users.put(admin.getUserId(), admin);
+
+        // Выводим сообщение о количестве созданных пользователей
+        System.out.println("Добавлено " + users.size() + " пользователей.");
+    }
+
 }
 
