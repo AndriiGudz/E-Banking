@@ -5,16 +5,32 @@ package service;
 
 import model.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserService {
+    private static User currentUser;
     private static Map<Integer, User> users = new HashMap<>();
+    public static List<User> getListUsers() {
+        return new ArrayList<>(users.values()); // Возвращаем список всех пользователей из Map
+    }
+
+    // Метод для установки текущего пользователя
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
+    // Метод для получения текущего пользователя
+    public static User currentUser() {
+        return currentUser;
+    }
 
     // Метод для регистрации пользователя с валидацией
-    public static void registerUser(String email, String password) {
+    public static void registerUser(String username, String email, String password) {
         if (!isValidEmail(email)) {
             System.out.println("Неверный формат email.");
             return;
@@ -25,9 +41,13 @@ public class UserService {
             return;
         }
 
-        User user = new User(email, password);
+        User user = new User(username, email, password);
         users.put(user.getUserId(), user);
         System.out.println("Пользователь успешно зарегистрирован.");
+
+        // После успешной регистрации устанавливаем этого пользователя как текущего аутентифицированного пользователя
+        setCurrentUser(user);
+        System.out.println("Пользователь успешно аутентифицирован.");
     }
 
     // Метод для получения пользователя по email
@@ -85,13 +105,25 @@ public class UserService {
     }
 
     // Метод для назначения нового администратора
+//    public static void assignAdministrator(User user) {
+//        if (user.isAdmin()) {
+//            System.out.println("Пользователь " + user.getUsername() + " уже является администратором.");
+//        } else {
+//            user.setAdmin(true);
+//            System.out.println("Пользователь " + user.getUsername() + " назначен администратором.");
+//        }
+//    }
+
+    // Метод для назначения роли ADMIN, доступный только администраторам
     public static void assignAdministrator(User user) {
-        if (user.isAdmin()) {
+        if (user != null && user.getRole() == User.Role.ADMIN) {
             System.out.println("Пользователь " + user.getUsername() + " уже является администратором.");
         } else {
-            user.setAdmin(true);
+            user.setRole(User.Role.ADMIN);
             System.out.println("Пользователь " + user.getUsername() + " назначен администратором.");
         }
+        System.out.println("Недостаточно прав для назначения администратора.");
     }
+
 }
 

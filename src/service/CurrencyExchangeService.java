@@ -19,13 +19,13 @@ public class CurrencyExchangeService {
 
 
     // Метод для добавления курса обмена валюты
-    public static void addExchangeRate(CurrencyCode baseCurrency, CurrencyCode targetCurrency, double rate) {
-        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
-        exchangeRates.put(key, rate);
-        recordExchangeRateHistory(key, rate);
-        availableCurrencies.add(baseCurrency);
-        availableCurrencies.add(targetCurrency);
-    }
+//    public static void addExchangeRate(CurrencyCode baseCurrency, CurrencyCode targetCurrency, double rate) {
+//        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
+//        exchangeRates.put(key, rate);
+//        recordExchangeRateHistory(key, rate);
+//        availableCurrencies.add(baseCurrency);
+//        availableCurrencies.add(targetCurrency);
+//    }
 
     // Метод для выполнения операции обмена валюты
     public static void exchangeCurrency(Account sourceAccount, Account targetAccount, double amount, double exchangeRate, double commission) {
@@ -46,54 +46,54 @@ public class CurrencyExchangeService {
     }
 
     // Метод для получения курса обмена валюты по заданным валютам
-    public static Double getExchangeRate(CurrencyCode baseCurrency, CurrencyCode targetCurrency) {
-        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
-        return exchangeRates.get(key);
-    }
+//    public static Double getExchangeRate(CurrencyCode baseCurrency, CurrencyCode targetCurrency) {
+//        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
+//        return exchangeRates.get(key);
+//    }
 
     // Метод для записи истории курса обмена валюты(записывает новые курсы обмена)
-    private static void recordExchangeRateHistory(String key, double rate) {
-        List<Double> rates = exchangeRatesHistory.getOrDefault(key, new ArrayList<>());
-        rates.add(rate);
-        exchangeRatesHistory.put(key, rates);
-    }
+//    private static void recordExchangeRateHistory(String key, double rate) {
+//        List<Double> rates = exchangeRatesHistory.getOrDefault(key, new ArrayList<>());
+//        rates.add(rate);
+//        exchangeRatesHistory.put(key, rates);
+//    }
 
     // Метод для получения истории курсов по валюте(возвращает историю курсов для заданной пары валют)
-    public static List<Double> getExchangeRatesHistory(CurrencyCode baseCurrency, CurrencyCode targetCurrency) {
-        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
-        return exchangeRatesHistory.getOrDefault(key, new ArrayList<>());
-    }
+//    public static List<Double> getExchangeRatesHistory(CurrencyCode baseCurrency, CurrencyCode targetCurrency) {
+//        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
+//        return exchangeRatesHistory.getOrDefault(key, new ArrayList<>());
+//    }
 
     // Метод для изменения курса обмена валюты администратором
-    public static void updateExchangeRate(CurrencyCode baseCurrency, CurrencyCode targetCurrency, double newRate) {
-        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
-        if (exchangeRates.containsKey(key)) {
-            exchangeRates.put(key, newRate);
-            recordExchangeRateHistory(key, newRate);
-        } else {
-            throw new IllegalArgumentException("Курс обмена для указанных валют не найден.");
-        }
-    }
+//    public static void updateExchangeRate(CurrencyCode baseCurrency, CurrencyCode targetCurrency, double newRate) {
+//        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
+//        if (exchangeRates.containsKey(key)) {
+//            exchangeRates.put(key, newRate);
+//            recordExchangeRateHistory(key, newRate);
+//        } else {
+//            throw new IllegalArgumentException("Курс обмена для указанных валют не найден.");
+//        }
+//    }
 
-    //если попытаться обновить или удалить курс обмена для валют, курс которых не существует,
+    // если попытаться обновить или удалить курс обмена для валют, курс которых не существует,
     // будет выброшено исключение IllegalArgumentException,
     // что поможет идентифицировать проблему сразу и обработать ее соответствующим образом в вашем коде
 
     // Метод для удаления курса обмена валюты
-    public static void removeExchangeRate(CurrencyCode baseCurrency, CurrencyCode targetCurrency) {
-        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
-        if (exchangeRates.containsKey(key)) {
-            exchangeRates.remove(key);
-            exchangeRatesHistory.remove(key);
-        } else {
-            throw new IllegalArgumentException("Курс обмена для указанных валют не найден.");
-        }
-    }
+//    public static void removeExchangeRate(CurrencyCode baseCurrency, CurrencyCode targetCurrency) {
+//        String key = baseCurrency.getCode() + "-" + targetCurrency.getCode();
+//        if (exchangeRates.containsKey(key)) {
+//            exchangeRates.remove(key);
+//            exchangeRatesHistory.remove(key);
+//        } else {
+//            throw new IllegalArgumentException("Курс обмена для указанных валют не найден.");
+//        }
+//    }
 
     // метод для получения списка доступных валют
-        public static Set<CurrencyCode> getAvailableCurrencies() {
-            return availableCurrencies;
-        }
+//        public static Set<CurrencyCode> getAvailableCurrencies() {
+//            return availableCurrencies;
+//        }
 
     // Метод для просмотра статистики операций по конкретной валюте
     public static List<Transaction> getCurrencyTransactionStatistics(List<Transaction> allTransactions, CurrencyCode currencyCode) {
