@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static repository.TransactionRepository.addTransaction;
+
 public class AccountRepository {
     // Коллекция для хранения счетов
     private static final Map<UUID, Account> accounts = new HashMap<>();
@@ -100,6 +102,7 @@ public class AccountRepository {
                 account.setBalance(account.getBalance() - amount);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
                 Transaction transaction = new Transaction(Transaction.Type.DEBIT, amount, LocalDateTime.now());
+                addTransaction(transaction);
                 System.out.println("Cумма " + amount + " была успешно снята со счета");
                 System.out.println("Id транзакции: " + transaction.getTransactionId() + " | Тип операции: " + transaction.getTransactionType() + " | Сумма: " + amount + " | Время операции: " + transaction.getDateTime().format(formatter));
                 System.out.println("Текущий баланс: " + account.getBalance());
@@ -110,6 +113,7 @@ public class AccountRepository {
             System.out.println("Такой счет не найден");
         }
     }
+
     public static void depositAmount(User user, String accountIdString, double amount) {
         if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
             System.out.println("Ошибка: Требуется авторизация для открытия нового счета.");
@@ -120,12 +124,64 @@ public class AccountRepository {
             account.setBalance(account.getBalance() + amount);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
             Transaction transaction = new Transaction(Transaction.Type.CREDIT, amount, LocalDateTime.now());
+            addTransaction(transaction);
             System.out.println("Cумма " + amount + " была успешно внесена на счет");
             System.out.println("Id транзакции: " + transaction.getTransactionId() + " | Тип операции: " + transaction.getTransactionType() + " | Сумма: " + amount + " | Время операции: " + transaction.getDateTime().format(formatter));
             System.out.println("Текущий баланс: " + account.getBalance());
         } else {
             System.out.println("Такой счет не найден");
         }
+    }
+
+
+//    private static final Map<Integer, Account> accounts = new HashMap<>();
+
+    //    // Метод для сохранения нового счета в репозитории
+//    public static void saveAccount(Account account) {
+//        accounts.put(account.getAccountId(), account);
+//    }
+//
+//    // Метод для поиска счета по его идентификатору
+//    public static Account findAccountById(int accountId) {
+//        return accounts.get(accountId);
+//    }
+//
+//    // Метод для удаления счета из репозитория
+//    public static void deleteAccount(int accountId) {
+//        accounts.remove(accountId);
+//    }
+//
+//    // Метод для получения всех счетов из репозитория
+//    public static Map<Integer, Account> getAllAccounts() {
+//        return accounts;
+//    }
+
+    public static void transferMoney(User user, UUID sourceAccountId, UUID targetAccountId, double amount) {
+        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+            System.out.println("Ошибка: Требуется авторизация для выполнения операции.");
+            return;
+        }
+        Account sourceAccount = accounts.get(sourceAccountId);
+        Account targetAccount = accounts.get(targetAccountId);
+
+        if (sourceAccount == null || targetAccount == null) {
+            System.out.println("Ошибка: Один из счетов не найден.");
+            return;
+        }
+
+        if (sourceAccount.getBalance() < amount) {
+            System.out.println("Ошибка: Недостаточно средств на счете для выполнения операции.");
+            return;
+        }
+        sourceAccount.setBalance(sourceAccount.getBalance() - amount);
+        targetAccount.setBalance(targetAccount.getBalance() + amount);
+
+        Transaction debitTransaction = new Transaction(Transaction.Type.DEBIT, amount, LocalDateTime.now());
+        Transaction creditTransaction = new Transaction(Transaction.Type.CREDIT, amount, LocalDateTime.now());
+
+        TransactionRepository.addTransaction(debitTransaction);
+        TransactionRepository.addTransaction(creditTransaction);
+
     }
 
 }

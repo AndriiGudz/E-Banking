@@ -2,24 +2,35 @@ package view;
 
 import model.Account;
 import model.CurrencyCode;
+import model.Transaction;
 import model.User;
 import repository.AccountRepository;
 
+import repository.TransactionRepository;
 import service.UserService;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
+import java.util.UUID;
+
+
 import service.CurrencyService;
+
+import static service.CurrencyService.viewAllTransactions;
 
 
 public class Main {
 
     private static final Scanner scanner = new Scanner(System.in);
 
+
     public static void main(String[] args) {
-        UserService.initialUsers();
 
         CurrencyService.addCurrency(CurrencyCode.USD, 1.0);
         CurrencyService.addCurrency(CurrencyCode.EUR, 1.12);
@@ -66,15 +77,34 @@ public class Main {
             scanner.nextLine();
             switch (choice) {
                 case 1:
+
+                    registerUser(scanner);
+                    pause();
+
                     registerUser(scanner); // реализовано
+
                     break;
                 case 2:
                     login();
+                    pause();
                     break;
                 case 3:
                     viewBalance();
+                    pause();
                     break;
                 case 4:
+
+                    deposit(scanner);
+                    pause();
+                    break;
+                case 5:
+                    withdraw(scanner);
+                    pause();
+                    break;
+                case 6:
+                    openAccount(scanner);
+                    pause();
+
                     deposit(scanner); // реализовано
                     break;
                 case 5:
@@ -82,21 +112,30 @@ public class Main {
                     break;
                 case 6:
                     openAccount(scanner); // реализовано
+
                     break;
                 case 7:
                     exchangeCurrency();
+                    pause();
                     break;
                 case 8:
                     viewOperations();
+                    pause();
                     break;
                 case 9:
                     closeAccount();
+                    pause();
                     break;
                 case 10:
+
+                    viewCurrencyRatesHistory();
+                    pause();
+
                     viewCurrencyRatesHistory(scanner); // реализовано
                     break;
                 case 11:
                     AccountRepository.viewAllAccountsUser(); // реализовано
+
                     break;
                 case 0:
                     userMenuRunning = false;
@@ -133,6 +172,39 @@ public class Main {
                 continue; // перезапуск цикла
             }
             int choice = scanner.nextInt();
+
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+                    changeExchangeRate(scanner);
+                    pause();
+                    break;
+                case 2:
+                    manageCurrencies();
+                    pause();
+                    break;
+                case 3:
+                    viewUserOperations();
+                    pause();
+                    break;
+                case 4:
+                    assignAdministrator();
+                    pause();
+                    break;
+                case 5:
+                    viewCurrencyStatistics(scanner);
+                    pause();
+                    break;
+                case 6:
+                    viewListUsers();
+                    pause();
+                    break;
+                case 0:
+                    adminMenuRunning = false;
+                    break;
+                default:
+                    System.out.println("Неверный ввод. Пожалуйста, попробуйте снова.");
+
             scanner.nextLine(); // очистка буфера после считывания int
             // User currentUser = UserService.currentUser(); // Получаем текущего пользователя
             // if (currentUser != null && currentUser.getRole() == User.Role.ADMIN) { // Проверяем, является ли пользователь администратором
@@ -167,6 +239,7 @@ public class Main {
 //            } else {
 //                System.out.println("Ошибка: Доступ запрещен. Требуется роль администратора.");
 //                adminMenuRunning = false; // Выходим из цикла, если у пользователя нет прав администратора
+
             }
         }
 
@@ -244,14 +317,51 @@ public class Main {
             AccountRepository.openAccount(user, Account.Type.valueOf(currencyAccount), 0);
         }
 
+
+    private static void exchangeCurrency() {
+        // Реализация обмена валюты
+        User user = UserService.currentUser();
+        AccountRepository.viewAllAccountsUser();
+
+        // Запрос номера счета отправителя
+        System.out.println("Введите номер счета отправителя: ");
+        String sourceAccountIdString = scanner.nextLine();
+        UUID sourceAccountId = UUID.fromString(sourceAccountIdString);
+
+        // Запрос номера счета получателя
+        System.out.println("Введите номер счета получателя: ");
+        String targetAccountIdString = scanner.nextLine();
+        UUID targetAccountId = UUID.fromString(targetAccountIdString);
+
+        // Запрос суммы для перевода
+        System.out.println("Введите сумму для перевода: ");
+        double amount = scanner.nextDouble();
+
+        try {
+            AccountRepository.transferMoney(user, sourceAccountId, targetAccountId, amount);
+            System.out.println("Перевод выполнен успешно.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка при выполнении перевода: " + e.getMessage());
+        }
+
         private static void exchangeCurrency () {
             // Реализация обмена валюты
 
+
         }
+
+
+    private static void viewOperations() {
+        // Реализация просмотра истории операций
+        User user = UserService.currentUser();
+        List<Transaction> transactions = TransactionRepository.getAllTransactions();
+        viewAllTransactions(transactions);
+    }
 
         private static void viewOperations () {
             // Реализация просмотра истории операций
         }
+
 
         private static void closeAccount () {
             // Реализация закрытия счета
@@ -305,5 +415,21 @@ public class Main {
             UserService.displayListUsers();
         }
     }
+
+
+    public static void pause() {
+        // Пауза для удобства просмотра информации в меню
+        System.out.println("\nНажмите Enter, чтобы продолжить...");
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+
+
 
 
