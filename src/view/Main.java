@@ -77,23 +77,20 @@ public class Main {
             scanner.nextLine();
             switch (choice) {
                 case 1:
-
                     registerUser(scanner);
                     pause();
-
                     registerUser(scanner); // реализовано
-
                     break;
                 case 2:
                     login();
                     pause();
                     break;
                 case 3:
+                    viewBalance(scanner);
                     viewBalance();
                     pause();
                     break;
                 case 4:
-
                     deposit(scanner);
                     pause();
                     break;
@@ -104,7 +101,6 @@ public class Main {
                 case 6:
                     openAccount(scanner);
                     pause();
-
                     deposit(scanner); // реализовано
                     break;
                 case 5:
@@ -112,9 +108,9 @@ public class Main {
                     break;
                 case 6:
                     openAccount(scanner); // реализовано
-
                     break;
                 case 7:
+                    exchangeCurrency(scanner);
                     exchangeCurrency();
                     pause();
                     break;
@@ -123,19 +119,17 @@ public class Main {
                     pause();
                     break;
                 case 9:
+                    closeAccount(scanner);
                     closeAccount();
                     pause();
                     break;
                 case 10:
-
                     viewCurrencyRatesHistory();
                     pause();
-
                     viewCurrencyRatesHistory(scanner); // реализовано
                     break;
                 case 11:
                     AccountRepository.viewAllAccountsUser(); // реализовано
-
                     break;
                 case 0:
                     userMenuRunning = false;
@@ -280,6 +274,15 @@ public class Main {
             UserService.authenticateUser(email, password);
         }
 
+    private static void viewBalance(Scanner scanner) {
+        // Реализация просмотра баланса
+        User user = UserService.currentUser();
+        AccountRepository.viewAllAccountsUser();
+        System.out.println("Выберите счет: ");
+        String accountId = scanner.nextLine();
+        AccountRepository.viewAccountBalance(user, accountId);
+    }
+
         private static void viewBalance () {
             // Реализация просмотра баланса
         }
@@ -318,8 +321,11 @@ public class Main {
         }
 
 
-    private static void exchangeCurrency() {
+    private static void exchangeCurrency(Scanner scanner) {
         // Реализация обмена валюты
+
+    }
+
         User user = UserService.currentUser();
         AccountRepository.viewAllAccountsUser();
 
@@ -350,12 +356,20 @@ public class Main {
 
         }
 
-
     private static void viewOperations() {
         // Реализация просмотра истории операций
         User user = UserService.currentUser();
         List<Transaction> transactions = TransactionRepository.getAllTransactions();
         viewAllTransactions(transactions);
+    }
+
+    private static void closeAccount(Scanner scanner) {
+        // Реализация закрытия счета
+        User user = UserService.currentUser();
+        AccountRepository.viewAllAccountsUser();
+        System.out.println("Выберите счет: ");
+        String accountIdString = scanner.nextLine();
+        AccountRepository.closeAccount(user, accountIdString);
     }
 
         private static void viewOperations () {
