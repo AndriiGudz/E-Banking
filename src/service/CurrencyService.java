@@ -79,7 +79,7 @@ public class CurrencyService {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
                 System.out.println("ID транзакции: " + transaction.getTransactionId());
                 System.out.println("Тип операции: " + transaction.getTransactionType());
-                System.out.println("Сумма: " + transaction.getAmount());
+                System.out.println("Сумма: " + transaction.getAmount() );
                 System.out.println("Дата и время: " + transaction.getDateTime().format(formatter));
                 System.out.println("----------------------------------------");
             }

@@ -387,4 +387,14 @@ public class Main {
 
 
     }
+
+    public static void logout() {
+        User activUser = UserService.currentUser();
+        if (activUser != null) {
+            UserService.setCurrentUser(null);
+            System.out.println("Вы вышли из аккаунта.");
+        } else {
+            System.out.println("Вы не вошли в систему.");
+        }
+    }
 }

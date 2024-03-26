@@ -131,6 +131,9 @@ public class UserService {
         User user = getUserByEmail(email);
         if (user != null && user.getPassword().equals(password)) {
             System.out.println("Вы успешно вошли в аккаунт.");
+            // После успешной авторизации устанавливаем этого пользователя как текущего аутентифицированного пользователя
+            setCurrentUser(user);
+            System.out.println("Пользователь успешно аутентифицирован.");
             return user;
         } else {
             System.out.println("Неправильный email или пароль. Попробуйте еще раз.");
