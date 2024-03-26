@@ -8,12 +8,14 @@ import model.User;
 import service.UserService;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static repository.TransactionRepository.addTransaction;
 
 public class AccountRepository {
     // Коллекция для хранения счетов
     private static final Map<UUID, Account> accounts = new HashMap<>();
-//    private static final Map<Integer, Account> accounts = new HashMap<>();
 
     // Метод для открытия нового счета
     public static Account openAccount(User user, Account.Type currencyAccount, double initialBalance) {
@@ -25,7 +27,9 @@ public class AccountRepository {
 
         // Создаем новый счет
         Account newAccount = new Account(currencyAccount, initialBalance, user);
-        System.out.println("Новый счет успешно создан: " + newAccount);
+        System.out.println("\nНовый счет успешно создан:");
+        System.out.println("Номер счета: " + newAccount.getAccountId() + " | Валюта счета: " + newAccount.getCurrencyAccount()
+        + " | Имя владельца счета: " + newAccount.getUser().getUsername() + " | Баланс счета: " + newAccount.getBalance() + " " + newAccount.getCurrencyAccount());
 
         // Сохраняем счет в репозитории
         saveAccount(newAccount);
@@ -96,9 +100,11 @@ public class AccountRepository {
         if (account != null) {
             if (account.getBalance() >= amount) {
                 account.setBalance(account.getBalance() - amount);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
                 Transaction transaction = new Transaction(Transaction.Type.DEBIT, amount, LocalDateTime.now());
+                addTransaction(transaction);
                 System.out.println("Cумма " + amount + " была успешно снята со счета");
-                System.out.println(transaction.toString());
+                System.out.println("Id транзакции: " + transaction.getTransactionId() + " | Тип операции: " + transaction.getTransactionType() + " | Сумма: " + amount + " | Время операции: " + transaction.getDateTime().format(formatter));
                 System.out.println("Текущий баланс: " + account.getBalance());
             } else {
                 System.out.println("На счету недостаточно средств");
@@ -116,14 +122,17 @@ public class AccountRepository {
         Account account = accounts.get(accountId);
         if (account != null) {
             account.setBalance(account.getBalance() + amount);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
             Transaction transaction = new Transaction(Transaction.Type.CREDIT, amount, LocalDateTime.now());
+            addTransaction(transaction);
             System.out.println("Cумма " + amount + " была успешно внесена на счет");
-            System.out.println(transaction.toString());
+            System.out.println("Id транзакции: " + transaction.getTransactionId() + " | Тип операции: " + transaction.getTransactionType() + " | Сумма: " + amount + " | Время операции: " + transaction.getDateTime().format(formatter));
             System.out.println("Текущий баланс: " + account.getBalance());
         } else {
             System.out.println("Такой счет не найден");
         }
     }
+
 
     public static void viewAccountBalance(User user, String accountIdString) {
         if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
@@ -159,9 +168,10 @@ public class AccountRepository {
     public static void exchangeCurrency() {
     }
 
+
 //    private static final Map<Integer, Account> accounts = new HashMap<>();
 
-//    // Метод для сохранения нового счета в репозитории
+    //    // Метод для сохранения нового счета в репозитории
 //    public static void saveAccount(Account account) {
 //        accounts.put(account.getAccountId(), account);
 //    }
@@ -180,5 +190,34 @@ public class AccountRepository {
 //    public static Map<Integer, Account> getAllAccounts() {
 //        return accounts;
 //    }
+
+    public static void transferMoney(User user, UUID sourceAccountId, UUID targetAccountId, double amount) {
+        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+            System.out.println("Ошибка: Требуется авторизация для выполнения операции.");
+            return;
+        }
+        Account sourceAccount = accounts.get(sourceAccountId);
+        Account targetAccount = accounts.get(targetAccountId);
+
+        if (sourceAccount == null || targetAccount == null) {
+            System.out.println("Ошибка: Один из счетов не найден.");
+            return;
+        }
+
+        if (sourceAccount.getBalance() < amount) {
+            System.out.println("Ошибка: Недостаточно средств на счете для выполнения операции.");
+            return;
+        }
+        sourceAccount.setBalance(sourceAccount.getBalance() - amount);
+        targetAccount.setBalance(targetAccount.getBalance() + amount);
+
+        Transaction debitTransaction = new Transaction(Transaction.Type.DEBIT, amount, LocalDateTime.now());
+        Transaction creditTransaction = new Transaction(Transaction.Type.CREDIT, amount, LocalDateTime.now());
+
+        TransactionRepository.addTransaction(debitTransaction);
+        TransactionRepository.addTransaction(creditTransaction);
+
+    }
+
 }
 

@@ -1,15 +1,14 @@
 package service;
 
-import model.Currency;
-import model.CurrencyCode;
-import model.ExchangeRateEntry;
-import model.Transaction;
+import model.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CurrencyService {
     private static Map<CurrencyCode, Currency> currencies = new HashMap<>();
@@ -77,16 +76,25 @@ public class CurrencyService {
         } else {
             System.out.println("Список всех транзакций:");
             for (Transaction transaction : transactions) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
                 System.out.println("ID транзакции: " + transaction.getTransactionId());
                 System.out.println("Тип операции: " + transaction.getTransactionType());
                 System.out.println("Сумма: " + transaction.getAmount());
-                System.out.println("Дата и время: " + transaction.getDateTime());
+                System.out.println("Дата и время: " + transaction.getDateTime().format(formatter));
                 System.out.println("----------------------------------------");
             }
         }
     }
 
-}
+
+
+
+
+
+
+
+
+}//end
 
 
 
