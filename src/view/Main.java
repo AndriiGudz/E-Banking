@@ -7,6 +7,7 @@ import model.User;
 import repository.AccountRepository;
 
 import repository.TransactionRepository;
+import service.AccountService;
 import service.UserService;
 
 import java.io.BufferedReader;
@@ -87,15 +88,15 @@ public class Main {
                     pause();
                     break;
                 case 3:
-                    viewBalance(scanner); // реализовано
+                    AccountRepository.viewBalance(scanner); // реализовано
                     pause();
                     break;
                 case 4:
-                    deposit(scanner); // реализовано
+                    AccountRepository.deposit(scanner); // реализовано
                     pause();
                     break;
                 case 5:
-                    withdraw(scanner); // реализовано
+                    AccountRepository.withdraw(scanner); // реализовано
                     pause();
                     break;
                 case 6:
@@ -111,7 +112,7 @@ public class Main {
                     pause();
                     break;
                 case 9:
-                    closeAccount(scanner); // реализовано
+                    AccountRepository.closeAccount(scanner); // реализовано
                     pause();
                     break;
                 case 10:
@@ -232,42 +233,6 @@ public class Main {
         UserService.authenticateUser(email, password);
     }
 
-    private static void viewBalance(Scanner scanner) {
-        // Реализация просмотра баланса
-        User user = UserService.currentUser();
-        AccountRepository.viewAllAccountsUser();
-        System.out.println("Выберите счет: ");
-        String accountId = scanner.nextLine();
-        AccountRepository.viewAccountBalance(user, accountId);
-    }
-
-    private static void viewBalance() {
-        // Реализация просмотра баланса
-    }
-
-    private static void deposit(Scanner scanner) {
-        // Реализация пополнения счета
-        User user = UserService.currentUser();
-        AccountRepository.viewAllAccountsUser();
-        System.out.println("Выберите счет: ");
-        String accountId = scanner.nextLine();
-        System.out.println("Введите сумму для пополнения счета: ");
-        double amount = scanner.nextInt();
-        AccountRepository.depositAmount(user, accountId, amount);
-    }
-
-    private static void withdraw(Scanner scanner) {
-        // Реализация снятия средств со счета
-        User user = UserService.currentUser();
-        AccountRepository.viewAllAccountsUser();
-        System.out.println("Выберите счет: ");
-        String accountIdString = scanner.nextLine();
-        System.out.println("Введите сумму для снятия: ");
-        double amount = scanner.nextInt();
-        AccountRepository.withdrawAmount(user, accountIdString, amount);
-    }
-
-
     private static void openAccount(Scanner scanner) {
         // Реализация открытия нового счета
         User user = UserService.currentUser();
@@ -308,23 +273,12 @@ public class Main {
         }
     }
 
-
     private static void viewOperations() {
         // Реализация просмотра истории операций
         User user = UserService.currentUser();
         List<Transaction> transactions = TransactionRepository.getAllTransactions();
         viewAllTransactions(transactions);
     }
-
-    private static void closeAccount(Scanner scanner) {
-        // Реализация закрытия счета
-        User user = UserService.currentUser();
-        AccountRepository.viewAllAccountsUser();
-        System.out.println("Выберите счет: ");
-        String accountIdString = scanner.nextLine();
-        AccountRepository.closeAccount(user, accountIdString);
-    }
-
 
     private static void viewCurrencyRatesHistory(Scanner scanner) {
         // Реализация просмотра истории курсов по валюте

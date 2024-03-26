@@ -29,7 +29,7 @@ public class AccountRepository {
         Account newAccount = new Account(currencyAccount, initialBalance, user);
         System.out.println("\nНовый счет успешно создан:");
         System.out.println("Номер счета: " + newAccount.getAccountId() + " | Валюта счета: " + newAccount.getCurrencyAccount()
-        + " | Имя владельца счета: " + newAccount.getUser().getUsername() + " | Баланс счета: " + newAccount.getBalance() + " " + newAccount.getCurrencyAccount());
+                + " | Имя владельца счета: " + newAccount.getUser().getUsername() + " | Баланс счета: " + newAccount.getBalance() + " " + newAccount.getCurrencyAccount());
 
         // Сохраняем счет в репозитории
         saveAccount(newAccount);
@@ -60,9 +60,10 @@ public class AccountRepository {
         }
     }
 
-    // Просмотреть открытые счета у пользователя
-    public static void viewAllAccountsUser() {
+    public static List<Account> viewAllAccountsUser() {
         User currentUser = UserService.currentUser(); // Получаем текущего авторизованного пользователя
+
+        List<Account> userAccounts = new ArrayList<>(); // Создаем список для хранения счетов пользователя
 
         if (currentUser != null) {
             boolean hasAccounts = false;
@@ -71,6 +72,8 @@ public class AccountRepository {
             for (Account account : accounts.values()) {
                 // Проверяем, совпадает ли владелец счета с текущим пользователем
                 if (account.getUser().equals(currentUser)) {
+                    userAccounts.add(account); // Добавляем счет в список счетов пользователя
+
                     System.out.println("------------------------------------");
                     System.out.println("**Информация о счете:**");
                     System.out.println("Владелец: " + account.getUser().getUsername());
@@ -89,15 +92,28 @@ public class AccountRepository {
         } else {
             System.out.println("Вы не авторизованы.");
         }
+
+        return userAccounts; // Возвращаем список счетов пользователя
     }
 
-    public static void withdrawAmount(User user, String accountIdString, double amount) {
-        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+    public static void withdraw(Scanner scanner) {
+        User user = UserService.currentUser();
+        if (user == null) {
             System.out.println("Ошибка: Требуется авторизация для операции снятия со счета.");
+            return;
         }
+        List<Account> userAccounts = AccountRepository.viewAllAccountsUser();
+        if (userAccounts == null || userAccounts.isEmpty()) {
+            return;
+        }
+        System.out.println("Выберите номер счета: ");
+        String accountIdString = scanner.nextLine();
         UUID accountId = UUID.fromString(accountIdString);
         Account account = accounts.get(accountId);
         if (account != null) {
+            System.out.println("Введите сумму для снятия со счета: ");
+            double amount = scanner.nextDouble();
+            scanner.nextLine();
             if (account.getBalance() >= amount) {
                 account.setBalance(account.getBalance() - amount);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
@@ -111,16 +127,28 @@ public class AccountRepository {
             }
         } else {
             System.out.println("Такой счет не найден");
+            return;
         }
     }
 
-    public static void depositAmount(User user, String accountIdString, double amount) {
-        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+    public static void deposit(Scanner scanner) {
+        User user = UserService.currentUser();
+        if (user == null) {
             System.out.println("Ошибка: Требуется авторизация для операции пополнения счета.");
+            return;
         }
+        List<Account> userAccounts = AccountRepository.viewAllAccountsUser();
+        if (userAccounts == null || userAccounts.isEmpty()) {
+            return;
+        }
+        System.out.println("Выберите номер счета для пополнения: ");
+        String accountIdString = scanner.nextLine();
         UUID accountId = UUID.fromString(accountIdString);
         Account account = accounts.get(accountId);
         if (account != null) {
+            System.out.println("Введите сумму для пополнения счета: ");
+            double amount = scanner.nextDouble();
+            scanner.nextLine();
             account.setBalance(account.getBalance() + amount);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
             Transaction transaction = new Transaction(Transaction.Type.CREDIT, amount, LocalDateTime.now());
@@ -130,66 +158,58 @@ public class AccountRepository {
             System.out.println("Текущий баланс: " + account.getBalance());
         } else {
             System.out.println("Такой счет не найден");
+            return;
         }
     }
 
-
-    public static void viewAccountBalance(User user, String accountIdString) {
-        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+    public static void viewBalance(Scanner scanner){
+        User user = UserService.currentUser();
+        if (user == null) {
             System.out.println("Ошибка: Требуется авторизация для просмотра баланса счета.");
+            return;
         }
+        List<Account> userAccounts = AccountRepository.viewAllAccountsUser();
+        if (userAccounts == null || userAccounts.isEmpty()) {
+            return;
+        }
+        System.out.println("Выберите номер счета для просмотра баланса: ");
+        String accountIdString = scanner.nextLine();
         UUID accountId = UUID.fromString(accountIdString);
         Account account = accounts.get(accountId);
         if (account != null) {
             System.out.println("Текущий баланс: " + account.getBalance());
         } else {
             System.out.println("Такой счет не найден");
+            return;
         }
     }
 
-    public static void closeAccount(User user, String accountIdString) {
-        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+    public static void closeAccount(Scanner scanner){
+        User user = UserService.currentUser();
+        if (user == null) {
             System.out.println("Ошибка: Требуется авторизация для закрытия счета.");
+            return;
         }
+        List<Account> userAccounts = AccountRepository.viewAllAccountsUser();
+        if (userAccounts == null || userAccounts.isEmpty()) {
+            return;
+        }
+        System.out.println("Выберите счет: ");
+        String accountIdString = scanner.nextLine();
         UUID accountId = UUID.fromString(accountIdString);
         Account account = accounts.get(accountId);
         if (account != null) {
             if (account.getBalance() > 0) {
-                System.out.println("Нельзя закрыть счет с положительным балансом");
+                System.out.println("Нельзя закрыть счет с положительным балансом. Снимите деньги со счета.");
             } else {
                 accounts.remove(accountId);
                 System.out.println("Счет успешно закрыт");
             }
         } else {
             System.out.println("Такой счет не найден");
+            return;
         }
     }
-
-    public static void exchangeCurrency() {
-    }
-
-
-//    private static final Map<Integer, Account> accounts = new HashMap<>();
-
-    //    // Метод для сохранения нового счета в репозитории
-//    public static void saveAccount(Account account) {
-//        accounts.put(account.getAccountId(), account);
-//    }
-//
-//    // Метод для поиска счета по его идентификатору
-//    public static Account findAccountById(int accountId) {
-//        return accounts.get(accountId);
-//    }
-//
-//    // Метод для удаления счета из репозитория
-//    public static void deleteAccount(int accountId) {
-//        accounts.remove(accountId);
-//    }
-//
-//    // Метод для получения всех счетов из репозитория
-//    public static Map<Integer, Account> getAllAccounts() {
-//        return accounts;
-//    }
 
     public static void transferMoney(User user, UUID sourceAccountId, UUID targetAccountId, double amount) {
         if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
