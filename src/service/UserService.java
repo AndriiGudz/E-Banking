@@ -15,8 +15,29 @@ import java.util.regex.Pattern;
 public class UserService {
     private static User currentUser;
     private static Map<Integer, User> users = new HashMap<>();
+
+    // Возвращаем список всех пользователей из Map
     public static List<User> getListUsers() {
         return new ArrayList<>(users.values()); // Возвращаем список всех пользователей из Map
+    }
+
+    // Выводит список всех пользователей
+    public static void displayListUsers() {
+        List<User> userList = new ArrayList<>(users.values());
+
+        if (userList.isEmpty()) {
+            System.out.println("Список пользователей пуст.");
+        } else {
+            System.out.println("\nСписок пользователей:");
+            for (User user : userList) {
+                System.out.println("------------------------------------");
+                System.out.println("ID пользователя: " + user.getUserId());
+                System.out.println("Имя пользователя: " + user.getUsername());
+                System.out.println("Email: " + user.getEmail());
+                System.out.println("Роль: " + user.getRole());
+                System.out.println("------------------------------------");
+            }
+        }
     }
 
     // Метод для установки текущего пользователя
@@ -54,6 +75,16 @@ public class UserService {
     public static User getUserByEmail(String email) {
         for (User user : users.values()) {
             if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null; // Пользователь не найден
+    }
+
+    // Метод для получения пользователя по Id
+    public static User getUserById(int userId) {
+        for (User user : users.values()) {
+            if (user.getUserId() == userId) {
                 return user;
             }
         }
@@ -115,14 +146,23 @@ public class UserService {
 //    }
 
     // Метод для назначения роли ADMIN, доступный только администраторам
-    public static void assignAdministrator(User user) {
-        if (user != null && user.getRole() == User.Role.ADMIN) {
+    public static void assignAdministrator(int userId) {
+        User user = getUserById(userId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("Пользователь с ID " + userId + " не найден.");
+        }
+
+        if (user.getRole() == User.Role.ADMIN) {
             System.out.println("Пользователь " + user.getUsername() + " уже является администратором.");
         } else {
-            user.setRole(User.Role.ADMIN);
-            System.out.println("Пользователь " + user.getUsername() + " назначен администратором.");
+            try {
+                user.setRole(User.Role.ADMIN);
+                System.out.println("Пользователь " + user.getUsername() + " назначен администратором.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Ошибка при назначении прав администратора: " + e.getMessage());
+            }
         }
-        System.out.println("Недостаточно прав для назначения администратора.");
     }
 
     // Метод для наполнения начальной базы пользователей.
@@ -141,7 +181,7 @@ public class UserService {
         users.put(admin.getUserId(), admin);
 
         // Выводим сообщение о количестве созданных пользователей
-        System.out.println("Добавлено " + users.size() + " пользователей.");
+        // System.out.println("Добавлено " + users.size() + " пользователей.");
     }
 
 }
