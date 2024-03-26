@@ -29,5 +29,4 @@ public class CurrencyExchange {
         return amount * rate;
     }
 
-// Другие методы, связанные с обменом валюты, могут быть добавлены по мере необходимости
 }
