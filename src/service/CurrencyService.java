@@ -1,13 +1,15 @@
 package service;
 
-import model.*;
 import model.Currency;
-import repository.TransactionRepository;
+import model.CurrencyCode;
+import model.ExchangeRateEntry;
+import model.Transaction;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CurrencyService {
     private static Map<CurrencyCode, Currency> currencies = new HashMap<>();
@@ -84,13 +86,6 @@ public class CurrencyService {
             }
         }
     }
-
-
-
-
-
-
-
 
 
 }//end

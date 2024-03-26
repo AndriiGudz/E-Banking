@@ -1,8 +1,9 @@
 package repository;
 
 
-import model.*;
-import service.CurrencyService;
+import model.Account;
+import model.Transaction;
+import model.User;
 import service.UserService;
 
 import java.time.LocalDateTime;
