@@ -5,6 +5,9 @@ package service;
 
 import model.User;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -143,6 +146,8 @@ public class UserService {
         // Выводим сообщение о количестве созданных пользователей
         System.out.println("Добавлено " + users.size() + " пользователей.");
     }
+
+
 
 }
 
