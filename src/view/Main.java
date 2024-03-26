@@ -16,7 +16,9 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
 import java.util.UUID;
+
 
 import service.CurrencyService;
 
@@ -33,8 +35,6 @@ public class Main {
         CurrencyService.addCurrency(CurrencyCode.USD, 1.0);
         CurrencyService.addCurrency(CurrencyCode.EUR, 1.12);
         CurrencyService.addCurrency(CurrencyCode.GBP, 1.33);
-        CurrencyService.addCurrency(CurrencyCode.PLN, 0.26);
-        CurrencyService.addCurrency(CurrencyCode.CZK, 0.044);
 
         boolean running = true;
         while (running) {
@@ -68,12 +68,21 @@ public class Main {
         boolean userMenuRunning = true;
         while (userMenuRunning) {
             printUserMenu();
+            if (!scanner.hasNextInt()) {
+                System.out.println("Ошибка: Введите числовое значение.");
+                scanner.next(); // очистка некорректного ввода
+                continue; // перезапуск цикла
+            }
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
                 case 1:
+
                     registerUser(scanner);
                     pause();
+
+                    registerUser(scanner); // реализовано
+
                     break;
                 case 2:
                     login();
@@ -84,6 +93,7 @@ public class Main {
                     pause();
                     break;
                 case 4:
+
                     deposit(scanner);
                     pause();
                     break;
@@ -94,6 +104,15 @@ public class Main {
                 case 6:
                     openAccount(scanner);
                     pause();
+
+                    deposit(scanner); // реализовано
+                    break;
+                case 5:
+                    withdraw(scanner); // реализовано
+                    break;
+                case 6:
+                    openAccount(scanner); // реализовано
+
                     break;
                 case 7:
                     exchangeCurrency();
@@ -108,8 +127,15 @@ public class Main {
                     pause();
                     break;
                 case 10:
+
                     viewCurrencyRatesHistory();
                     pause();
+
+                    viewCurrencyRatesHistory(scanner); // реализовано
+                    break;
+                case 11:
+                    AccountRepository.viewAllAccountsUser(); // реализовано
+
                     break;
                 case 0:
                     userMenuRunning = false;
@@ -132,6 +158,7 @@ public class Main {
         System.out.println("8. Просмотр истории операций");
         System.out.println("9. Закрытие счета");
         System.out.println("10. Просмотр истории курсов по валюте");
+        System.out.println("11. Просмотреть все счета пользователя");
         System.out.println("0. Вернуться в главное меню");
     }
 
@@ -139,7 +166,13 @@ public class Main {
         boolean adminMenuRunning = true;
         while (adminMenuRunning) {
             printAdminMenu();
+            if (!scanner.hasNextInt()) {
+                System.out.println("Ошибка: Введите числовое значение.");
+                scanner.next(); // очистка некорректного ввода
+                continue; // перезапуск цикла
+            }
             int choice = scanner.nextInt();
+
             scanner.nextLine();
             switch (choice) {
                 case 1:
@@ -171,82 +204,119 @@ public class Main {
                     break;
                 default:
                     System.out.println("Неверный ввод. Пожалуйста, попробуйте снова.");
+
+            scanner.nextLine(); // очистка буфера после считывания int
+            // User currentUser = UserService.currentUser(); // Получаем текущего пользователя
+            // if (currentUser != null && currentUser.getRole() == User.Role.ADMIN) { // Проверяем, является ли пользователь администратором
+                switch (choice) {
+                    case 1:
+                        changeExchangeRate(scanner); // реализовано
+                        break;
+                    case 2:
+                        manageCurrencies(); // реализовано - просмотр всех валют
+                        break;
+                    case 3:
+                        viewUserOperations();
+                        break;
+                    case 4:
+                        assignAdministrator(scanner); // реализовано
+                        break;
+                    case 5:
+                        viewCurrencyStatistics(scanner); // реализовано
+                        break;
+                    case 6:
+                        viewListUsers(); // реализовано
+                        break;
+                    case 7:
+                        AccountRepository.getAllAccounts(); // реализовано
+                        break;
+                    case 0:
+                        adminMenuRunning = false;
+                        break;
+                    default:
+                        System.out.println("Неверный ввод. Пожалуйста, попробуйте снова.");
+                }
+//            } else {
+//                System.out.println("Ошибка: Доступ запрещен. Требуется роль администратора.");
+//                adminMenuRunning = false; // Выходим из цикла, если у пользователя нет прав администратора
+
             }
         }
-    }
 
-    private static void printAdminMenu() {
-        System.out.println("Меню администратора:");
-        System.out.println("1. Изменение курса валюты");
-        System.out.println("2. Управление валютами");
-        System.out.println("3. Просмотр истории операций пользователя");
-        System.out.println("4. Назначение администратора");
-        System.out.println("5. Просмотр статистики операций по валюте");
-        System.out.println("6. Просмотр список всех пользователей");
-        System.out.println("0. Вернуться в главное меню");
-    }
+        private static void printAdminMenu () {
+            System.out.println("Меню администратора:");
+            System.out.println("1. Изменение курса валюты");
+            System.out.println("2. Управление валютами");
+            System.out.println("3. Просмотр истории операций пользователя");
+            System.out.println("4. Назначение администратора");
+            System.out.println("5. Просмотр статистики операций по валюте");
+            System.out.println("6. Просмотр список всех пользователей");
+            System.out.println("7. Просмотреть все счета всех пользователей");
+            System.out.println("0. Вернуться в главное меню");
+        }
 
-    private static void registerUser(Scanner scanner) {
-        // Реализация регистрации нового пользователя
-        System.out.println("Введите Имя пользователя:");
-        String username = scanner.nextLine();
+        private static void registerUser (Scanner scanner){
+            // Реализация регистрации нового пользователя
+            System.out.println("Введите Имя пользователя:");
+            String username = scanner.nextLine();
 
-        System.out.println("Введите ваш email:");
-        String email = scanner.nextLine();
+            System.out.println("Введите ваш email:");
+            String email = scanner.nextLine();
 
-        System.out.println("Введите пароль:");
-        String password = scanner.nextLine();
+            System.out.println("Введите пароль:");
+            String password = scanner.nextLine();
 
-        UserService.registerUser(username, email, password);
-    }
+            UserService.registerUser(username, email, password);
+        }
 
-    private static void login() {
-        // Реализация входа в аккаунт
-        System.out.println("Введите ваш email:");
-        String email = scanner.nextLine();
+        private static void login () {
+            // Реализация входа в аккаунт
+            System.out.println("Введите ваш email:");
+            String email = scanner.nextLine();
 
-        System.out.println("Введите пароль:");
-        String password = scanner.nextLine();
+            System.out.println("Введите пароль:");
+            String password = scanner.nextLine();
 
-        UserService.authenticateUser(email, password);
-    }
+            UserService.authenticateUser(email, password);
+        }
 
-    private static void viewBalance() {
-        // Реализация просмотра баланса
-    }
+        private static void viewBalance () {
+            // Реализация просмотра баланса
+        }
 
-    private static void deposit(Scanner scanner) {
-        // Реализация пополнения счета
-        User user = UserService.currentUser();
-        AccountRepository.viewAllAccountsUser();
-        System.out.println("Выберите счет: ");
-        String accountId = scanner.nextLine();
-        System.out.println("Введите сумму для пополнения счета: ");
-        double amount = scanner.nextInt();
-        AccountRepository.depositAmount(user, accountId, amount);
-    }
+        private static void deposit (Scanner scanner){
+            // Реализация пополнения счета
+            User user = UserService.currentUser();
+            AccountRepository.viewAllAccountsUser();
+            System.out.println("Выберите счет: ");
+            String accountId = scanner.nextLine();
+            System.out.println("Введите сумму для пополнения счета: ");
+            double amount = scanner.nextInt();
+            AccountRepository.depositAmount(user, accountId, amount);
+        }
 
-    private static void withdraw(Scanner scanner) {
-        // Реализация снятия средств со счета
-        User user = UserService.currentUser();
-        AccountRepository.viewAllAccountsUser();
-        System.out.println("Выберите счет: ");
-        String accountIdString = scanner.nextLine();
-        System.out.println("Введите сумму для снятия: ");
-        double amount = scanner.nextInt();
-        AccountRepository.withdrawAmount(user, accountIdString, amount);
-    }
+        private static void withdraw (Scanner scanner){
+            // Реализация снятия средств со счета
+            User user = UserService.currentUser();
+            AccountRepository.viewAllAccountsUser();
+            System.out.println("Выберите счет: ");
+            String accountIdString = scanner.nextLine();
+            System.out.println("Введите сумму для снятия: ");
+            double amount = scanner.nextInt();
+            AccountRepository.withdrawAmount(user, accountIdString, amount);
+        }
 
 
-    private static void openAccount(Scanner scanner) {
-        // Реализация открытия нового счета
-        User user = UserService.currentUser();
+        private static void openAccount (Scanner scanner){
+            // Реализация открытия нового счета
+            User user = UserService.currentUser();
 
-        System.out.println("Выберите валюту счета:" + Arrays.toString(Account.Type.values()));
-        String currencyAccount = String.valueOf(Main.scanner.nextLine());
+            System.out.println("Выберите валюту счета:" + Arrays.toString(Account.Type.values()));
+            String currencyAccount = String.valueOf(Main.scanner.nextLine());
 
-        AccountRepository.openAccount(user, Account.Type.valueOf(currencyAccount), 0);
-    }
+            AccountRepository.openAccount(user, Account.Type.valueOf(currencyAccount), 0);
+        }
+
 
     private static void exchangeCurrency() {
         // Реализация обмена валюты
@@ -274,7 +344,12 @@ public class Main {
             System.out.println("Ошибка при выполнении перевода: " + e.getMessage());
         }
 
-    }
+        private static void exchangeCurrency () {
+            // Реализация обмена валюты
+
+
+        }
+
 
     private static void viewOperations() {
         // Реализация просмотра истории операций
@@ -283,48 +358,64 @@ public class Main {
         viewAllTransactions(transactions);
     }
 
-    private static void closeAccount() {
-        // Реализация закрытия счета
+        private static void viewOperations () {
+            // Реализация просмотра истории операций
+        }
+
+
+        private static void closeAccount () {
+            // Реализация закрытия счета
+        }
+
+        private static void viewCurrencyRatesHistory (Scanner scanner){
+            // Реализация просмотра истории курсов по валюте
+            System.out.println("Укажите код валюты для просмотра:");
+            CurrencyCode code = CurrencyCode.valueOf(scanner.nextLine());
+            CurrencyService.displayExchangeRateHistory(code);
+        }
+
+        private static void changeExchangeRate (Scanner scanner){
+            // Реализация изменения курса валюты
+            System.out.println("Введите код валюты:");
+            CurrencyCode code = CurrencyCode.valueOf(scanner.nextLine());
+            System.out.println("Введите обменный курс:");
+            double newExchangeRate = scanner.nextDouble();
+
+            CurrencyService.updateExchangeRate(code, newExchangeRate, LocalDateTime.now());
+        }
+
+        private static void manageCurrencies () {
+            // Реализация управления валютами - просмотреть список всех валют
+            CurrencyService.displayAllCurrencies();
+        }
+
+        private static void viewUserOperations () {
+            // Реализация просмотра истории операций пользователя
+        }
+
+        private static void assignAdministrator (Scanner scanner){
+            // Реализация назначения администратора
+            UserService.displayListUsers();
+            System.out.println("Выберите Id пользователя для назначения Администратором:");
+            int userId = scanner.nextInt();
+
+            UserService.assignAdministrator(userId);
+        }
+
+        private static void viewCurrencyStatistics (Scanner scanner){
+            // Реализация просмотра статистики операций по валюте
+            System.out.println("Укажите код валюты для просмотра:");
+            CurrencyCode code = CurrencyCode.valueOf(scanner.nextLine());
+            CurrencyService.displayExchangeRateHistory(code);
+        }
+
+        private static void viewListUsers () {
+            // Реализация просмотра списка всех пользователей
+            // System.out.println(UserService.getListUsers());
+            UserService.displayListUsers();
+        }
     }
 
-    private static void viewCurrencyRatesHistory() {
-        // Реализация просмотра истории курсов по валюте
-    }
-
-    private static void changeExchangeRate(Scanner scanner) {
-        // Реализация изменения курса валюты
-        System.out.println("Введите код валюты:");
-        CurrencyCode code = CurrencyCode.valueOf(scanner.nextLine());
-        System.out.println("Введите обменный курс:");
-        double newExchangeRate = scanner.nextDouble();
-
-        CurrencyService.updateExchangeRate(code, newExchangeRate, LocalDateTime.now());
-    }
-
-    private static void manageCurrencies() {
-        // Реализация управления валютами - просмотреть список всех валют
-        CurrencyService.displayAllCurrencies();
-    }
-
-    private static void viewUserOperations() {
-        // Реализация просмотра истории операций пользователя
-    }
-
-    private static void assignAdministrator() {
-        // Реализация назначения администратора
-    }
-
-    private static void viewCurrencyStatistics(Scanner scanner) {
-        // Реализация просмотра статистики операций по валюте
-        System.out.println("Укажите код валюты для просмотра:");
-        CurrencyCode code = CurrencyCode.valueOf(scanner.nextLine());
-        CurrencyService.displayExchangeRateHistory(code);
-    }
-
-    private static void viewListUsers() {
-        // Реализация просмотра списка всех пользователей
-        System.out.println(UserService.getListUsers());
-    }
 
     public static void pause() {
         // Пауза для удобства просмотра информации в меню
@@ -338,5 +429,7 @@ public class Main {
     }
 
 }
+
+
 
 
