@@ -5,9 +5,6 @@ package service;
 
 import model.User;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -141,15 +138,6 @@ public class UserService {
         }
     }
 
-    // Метод для назначения нового администратора
-//    public static void assignAdministrator(User user) {
-//        if (user.isAdmin()) {
-//            System.out.println("Пользователь " + user.getUsername() + " уже является администратором.");
-//        } else {
-//            user.setAdmin(true);
-//            System.out.println("Пользователь " + user.getUsername() + " назначен администратором.");
-//        }
-//    }
 
     // Метод для назначения роли ADMIN, доступный только администраторам
     public static void assignAdministrator(int userId) {

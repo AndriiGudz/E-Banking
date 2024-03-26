@@ -50,6 +50,9 @@ public class Main {
                 case 2:
                     handleAdminMenu();
                     break;
+                case 3:
+                    logout();
+                    break;
                 case 0:
                     running = false;
                     break;
@@ -64,6 +67,7 @@ public class Main {
         System.out.println("Выберите раздел меню:\n");
         System.out.println("1. Пользователь");
         System.out.println("2. Администратор");
+        System.out.println("3. Выход из аккаунта");
         System.out.println("0. Выход");
     }
 

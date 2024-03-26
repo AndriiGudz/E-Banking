@@ -1,12 +1,8 @@
 package service;
 
 import model.Account;
-import model.Transaction;
-import model.User;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AccountService {
@@ -48,19 +44,7 @@ public class AccountService {
         return account.getBalance();
     }
 
-    // Метод для просмотра истории операций для конкретного счета
-
-//    public static List<Transaction> getTransactionHistory(User user) {
-//        List<Transaction> transactionHistory = new ArrayList<>();
-//        for (Object account : user.getAccounts()) {
-//            if (account instanceof Account) {
-//                transactionHistory.addAll(((Account) account).getTransactionHistory());
-//            }
-//        }
-//        return transactionHistory;
-//    }
-
-    //метод проверяет остаток средств на счете. Если остаток равен 0, счет закрывается.
+    // Метод проверяет остаток средств на счете. Если остаток равен 0, счет закрывается.
     // Если остаток больше 0, выводится сообщение о необходимости снять все средства сначала.
     // Если остаток отрицательный, выводится сообщение о наличии задолженности, которую нужно погасить перед закрытием счета.
     public static void closeAccount(Account account) {
@@ -85,19 +69,4 @@ public class AccountService {
         }
     }
 
-    // Метод для просмотра истории операций пользователя администратору
-
-
-    // будет принимать пользователя, перебирает все его счета и добавляет историю операций каждого
-    // счета в общий список истории операций пользователя и возвращает историю операций для всех его счетов
-//    public static List<Transaction> getUserTransactionHistory(User user) {
-//        List<Transaction> userTransactionHistory = new ArrayList<>();
-//        for (Object accountObj : user.getAccounts()) {
-//            if (accountObj instanceof Account) {
-//                Account account = (Account) accountObj;
-//                userTransactionHistory.addAll(account.getTransactionHistory());
-//            }
-//        }
-//        return userTransactionHistory;
-//    }
 }
