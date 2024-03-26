@@ -60,7 +60,7 @@ public class Main {
 
 
     private static void printMainMenu() {
-        System.out.println("Выберите тип пользователя:");
+        System.out.println("Выберите раздел меню:\n");
         System.out.println("1. Пользователь");
         System.out.println("2. Администратор");
         System.out.println("0. Выход");
@@ -139,7 +139,7 @@ public class Main {
         System.out.println("4. Пополнение счета");
         System.out.println("5. Снятие средств со счета");
         System.out.println("6. Открытие нового счета");
-        System.out.println("7. Обмен валюты");
+        System.out.println("7. Перевод средств между счетами");
         System.out.println("8. Просмотр истории операций");
         System.out.println("9. Закрытие счета");
         System.out.println("10. Просмотр истории курсов по валюте");
@@ -198,10 +198,10 @@ public class Main {
     private static void printAdminMenu() {
         System.out.println("Меню администратора:");
         System.out.println("1. Изменение курса валюты");
-        System.out.println("2. Управление валютами");
-        System.out.println("3. Просмотр истории операций пользователя");
+        System.out.println("2. Просмотреть список валют и их курс");
+        System.out.println("3. Просмотр истории операций пользователя - НЕ реализовано");
         System.out.println("4. Назначение администратора");
-        System.out.println("5. Просмотр статистики операций по валюте");
+        System.out.println("5. Просмотр статистики изменения курса валют");
         System.out.println("6. Просмотр список всех пользователей");
         System.out.println("7. Просмотреть все счета всех пользователей");
         System.out.println("0. Вернуться в главное меню");
@@ -281,7 +281,6 @@ public class Main {
 
     private static void exchangeCurrency(Scanner scanner) {
         // Реализация обмена валюты - реализован только трансфер
-
         User user = UserService.currentUser();
         AccountRepository.viewAllAccountsUser();
 
@@ -297,15 +296,27 @@ public class Main {
 
         // Запрос суммы для перевода
         System.out.println("Введите сумму для перевода: ");
-        double amount = scanner.nextDouble();
+        // double amount = scanner.nextDouble();
+        double amount;
+
+        try {
+            amount = Double.parseDouble(scanner.nextLine());
+            if (amount <= 0) {
+                System.out.println("Сумма для перевода должна быть положительным числом.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Неверный формат суммы для перевода.");
+            return;
+        }
 
         try {
             AccountRepository.transferMoney(user, sourceAccountId, targetAccountId, amount);
-            System.out.println("Перевод выполнен успешно.");
-        } catch (
-                IllegalArgumentException e) {
+            // System.out.println("Перевод выполнен успешно.");
+        } catch (IllegalArgumentException e) {
             System.out.println("Ошибка при выполнении перевода: " + e.getMessage());
         }
+
     }
 
 

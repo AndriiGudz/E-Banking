@@ -5,7 +5,6 @@ import java.util.UUID;
 public class Account {
     public enum Type {EUR, USD, GBP}
     private UUID accountId;
-
     private Type currencyAccount; // валюта счета
     private double balance;
     private User user;
