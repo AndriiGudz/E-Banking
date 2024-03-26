@@ -1,5 +1,6 @@
 package view;
 
+import Trash.CurrencyExchange;
 import model.Account;
 import model.User;
 import repository.AccountRepository;
@@ -29,6 +30,7 @@ public class TestApp {
         UserService.assignAdministrator(4);
 
         UserService.displayListUsers();
+
 
 
 

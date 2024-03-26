@@ -1,10 +1,8 @@
 package repository;
 
 
-import model.Account;
-import model.Transaction;
-import model.TransactionType;
-import model.User;
+import model.*;
+import service.CurrencyService;
 import service.UserService;
 
 import java.time.LocalDateTime;
@@ -211,6 +209,9 @@ public class AccountRepository {
         }
     }
 
+
+
+    // Перевод денег между счетами - проверяет что валюта счетов одинаковая.
     public static void transferMoney(User user, UUID sourceAccountId, UUID targetAccountId, double amount) {
         if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
             System.out.println("Ошибка: Требуется авторизация для выполнения операции.");
@@ -221,6 +222,12 @@ public class AccountRepository {
 
         if (sourceAccount == null || targetAccount == null) {
             System.out.println("Ошибка: Один из счетов не найден.");
+            return;
+        }
+
+        // Проверка валюты счетов
+        if (sourceAccount.getCurrencyAccount() != targetAccount.getCurrencyAccount()) {
+            System.out.println("Ошибка: Нельзя выполнить транзакцию между счетами с разными валютами.");
             return;
         }
 
@@ -236,6 +243,8 @@ public class AccountRepository {
 
         TransactionRepository.addTransaction(debitTransaction);
         TransactionRepository.addTransaction(creditTransaction);
+
+        System.out.println("Перевод выполнен успешно.");
 
     }
 
