@@ -68,7 +68,7 @@ public class Main {
                     login();
                     break;
                 case 3:
-                    viewBalance();
+                    viewBalance(scanner);
                     break;
                 case 4:
                     deposit(scanner);
@@ -80,13 +80,13 @@ public class Main {
                     openAccount(scanner);
                     break;
                 case 7:
-                    exchangeCurrency();
+                    exchangeCurrency(scanner);
                     break;
                 case 8:
                     viewOperations();
                     break;
                 case 9:
-                    closeAccount();
+                    closeAccount(scanner);
                     break;
                 case 10:
                     viewCurrencyRatesHistory();
@@ -185,8 +185,13 @@ public class Main {
         UserService.authenticateUser(email, password);
     }
 
-    private static void viewBalance() {
+    private static void viewBalance(Scanner scanner) {
         // Реализация просмотра баланса
+        User user = UserService.currentUser();
+        AccountRepository.viewAllAccountsUser();
+        System.out.println("Выберите счет: ");
+        String accountId = scanner.nextLine();
+        AccountRepository.viewAccountBalance(user, accountId);
     }
 
     private static void deposit(Scanner scanner) {
@@ -222,17 +227,21 @@ public class Main {
         AccountRepository.openAccount(user, Account.Type.valueOf(currencyAccount), 0);
     }
 
-    private static void exchangeCurrency() {
+    private static void exchangeCurrency(Scanner scanner) {
         // Реализация обмена валюты
-
     }
 
     private static void viewOperations() {
         // Реализация просмотра истории операций
     }
 
-    private static void closeAccount() {
+    private static void closeAccount(Scanner scanner) {
         // Реализация закрытия счета
+        User user = UserService.currentUser();
+        AccountRepository.viewAllAccountsUser();
+        System.out.println("Выберите счет: ");
+        String accountIdString = scanner.nextLine();
+        AccountRepository.closeAccount(user, accountIdString);
     }
 
     private static void viewCurrencyRatesHistory() {

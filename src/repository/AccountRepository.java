@@ -89,7 +89,7 @@ public class AccountRepository {
 
     public static void withdrawAmount(User user, String accountIdString, double amount) {
         if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
-            System.out.println("Ошибка: Требуется авторизация для открытия нового счета.");
+            System.out.println("Ошибка: Требуется авторизация для операции снятия со счета.");
         }
         UUID accountId = UUID.fromString(accountIdString);
         Account account = accounts.get(accountId);
@@ -107,9 +107,10 @@ public class AccountRepository {
             System.out.println("Такой счет не найден");
         }
     }
+
     public static void depositAmount(User user, String accountIdString, double amount) {
         if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
-            System.out.println("Ошибка: Требуется авторизация для открытия нового счета.");
+            System.out.println("Ошибка: Требуется авторизация для операции пополнения счета.");
         }
         UUID accountId = UUID.fromString(accountIdString);
         Account account = accounts.get(accountId);
@@ -122,6 +123,40 @@ public class AccountRepository {
         } else {
             System.out.println("Такой счет не найден");
         }
+    }
+
+    public static void viewAccountBalance(User user, String accountIdString) {
+        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+            System.out.println("Ошибка: Требуется авторизация для просмотра баланса счета.");
+        }
+        UUID accountId = UUID.fromString(accountIdString);
+        Account account = accounts.get(accountId);
+        if (account != null) {
+            System.out.println("Текущий баланс: " + account.getBalance());
+        } else {
+            System.out.println("Такой счет не найден");
+        }
+    }
+
+    public static void closeAccount(User user, String accountIdString) {
+        if (UserService.currentUser() == null || !UserService.currentUser().equals(user)) {
+            System.out.println("Ошибка: Требуется авторизация для закрытия счета.");
+        }
+        UUID accountId = UUID.fromString(accountIdString);
+        Account account = accounts.get(accountId);
+        if (account != null) {
+            if (account.getBalance() > 0) {
+                System.out.println("Нельзя закрыть счет с положительным балансом");
+            } else {
+                accounts.remove(accountId);
+                System.out.println("Счет успешно закрыт");
+            }
+        } else {
+            System.out.println("Такой счет не найден");
+        }
+    }
+
+    public static void exchangeCurrency() {
     }
 
 //    private static final Map<Integer, Account> accounts = new HashMap<>();
