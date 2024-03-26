@@ -173,7 +173,7 @@ public class UserService {
         // Создаем несколько тестовых пользователей
         User user1 = new User("User1", "user1@example.com", "Password1!");
         User user2 = new User("User2", "user2@example.com", "Password2!");
-        User admin = new User("admin", "admin@example.com", "Password3!");
+        User admin = new User("admin", "admin@admin.com", "Admin123!");
 
         // Назначаем администратору роль "ADMIN"
         admin.setRole(User.Role.ADMIN);
